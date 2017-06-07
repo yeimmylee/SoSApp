@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="yei.poli.edu.botonpanico">
+
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".SplashScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".PrincipalBPActivity">
+            <intent-filter>
+                <action android:name="yei.poli.edu.botonpanico.MAINACTIVITY" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".AcercaDeActivity"
+            android:label="@string/title_activity_acerca_de"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AyudaActivity"
+            android:label="@string/title_activity_ayuda"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".HistorialAlertasListActivity"
+            android:label="@string/title_historialalertas_list"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".HistorialAlertasDetailActivity"
+            android:label="@string/title_historialalertas_detail"
+            android:parentActivityName=".HistorialAlertasListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="yei.poli.edu.botonpanico.HistorialAlertasListActivity" />
+        </activity>
+        <activity
+            android:name=".ConfiguracionBPActivity"
+            android:label="@string/title_activity_configuracion_bp"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+    </application>
+
+</manifest>
