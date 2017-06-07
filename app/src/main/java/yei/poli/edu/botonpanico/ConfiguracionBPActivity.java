@@ -1,25 +1,30 @@
 package yei.poli.edu.botonpanico;
 
 import android.Manifest;
-import android.app.LoaderManager;
+import android.content.ContentUris;
 import android.content.Intent;
-import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 import yei.poli.edu.botonpanico.util.AdminPreferencias;
 import yei.poli.edu.botonpanico.util.Constantes;
@@ -27,15 +32,10 @@ import yei.poli.edu.botonpanico.util.Constantes;
 /**
  * Created by Yeimmy Lee, Javier Becerra - Politécnico Grancolombiano - 2017
  */
-public class ConfiguracionBPActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class ConfiguracionBPActivity extends AppCompatActivity {
 
-    /** para los permisos **/
-    private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
-
-    /** para los contactos **/
-    static final int REQUEST_SELECT_CONTACT = 1;
-    static final int DETAILS_QUERY_ID = 0;
-    Uri contactUri = null;
+    /** variable para los logs **/
+    private static final String TAG = ConfiguracionBPActivity.class.getSimpleName();
 
     /** elementos de la vista **/
     private Switch btnEnviarMensaje;
@@ -44,7 +44,15 @@ public class ConfiguracionBPActivity extends AppCompatActivity implements Loader
     private CheckBox chkAdjuntarImagenes;
 
     /** preferencias **/
-    AdminPreferencias adminPreferencias;
+    private AdminPreferencias adminPreferencias;
+
+    // para los contactos
+    private Uri uriContact;
+    private String contactID;
+    private String contactName;
+    private String contactEmail;
+    private String contactNumber;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,15 +60,6 @@ public class ConfiguracionBPActivity extends AppCompatActivity implements Loader
         setContentView(R.layout.activity_configuracion_bp);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
 
         // inicializa preferencias
         adminPreferencias = new AdminPreferencias(this);
@@ -71,7 +70,6 @@ public class ConfiguracionBPActivity extends AppCompatActivity implements Loader
         inicializarChkAdjuntarAudio();
         inicializarChkAdjuntarImagenes();
     }
-
 
     /**********************************************************************************************/
     /************************** PROCESA OBJETOS DE LA VISTA ***************************************/
@@ -157,6 +155,7 @@ public class ConfiguracionBPActivity extends AppCompatActivity implements Loader
         }
     }
 
+    // listener de los checkbox
     public void onCheckboxClicked(View view) {
 
         // averigua si fue marcado o desmarcado
@@ -179,56 +178,14 @@ public class ConfiguracionBPActivity extends AppCompatActivity implements Loader
         }
     }
 
-
-    public void agregarContacto(View v){
-
-        //Se valida inicialmente si tenemos permisos para acceder a los contactos
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-            //Aquí solicita permisos
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS},MY_PERMISSIONS_REQUEST_READ_CONTACTS);
-            //después de solicitar los permisos llama al método: onRequestPermissionsResult, para proceder de acuerdo a la respuesta del usuario.
-        } else {
-            //Si tenemos permisos continúa con el proceso normal
-            cargarContactos();
-        }
-    }
-
-    public void cargarContactos () {
-
-        Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-        intent.setType(ContactsContract.Contacts.CONTENT_TYPE);
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(intent, REQUEST_SELECT_CONTACT);
-        }
-    }
-
-
-    /**********************************************************************************************/
-    /************************** PROCESA LA RESPUESTA **********************************************/
-    /**********************************************************************************************/
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_SELECT_CONTACT && resultCode == RESULT_OK) {
-            contactUri = data.getData();
-            Toast.makeText(getBaseContext(), "Aquí proceso el contacto", Toast.LENGTH_LONG).show();
-            System.out.println("Aquí proceso el contacto " + contactUri);
-
-            //getLoaderManager().initLoader(DETAILS_QUERY_ID, null, this);
-
-
-        }
-    }
-
-
     /**********************************************************************************************/
     /************************** PERMISOS **********************************************************/
     /**********************************************************************************************/
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_READ_CONTACTS: {
+            case Constantes.MY_PERMISSIONS_REQUEST_READ_CONTACTS: {
                 // Si la solicitud fue cancelada, el resultado es un arreglo vacío.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
@@ -244,23 +201,147 @@ public class ConfiguracionBPActivity extends AppCompatActivity implements Loader
         }
     }
 
-
     /**********************************************************************************************/
-    /************************** PROCESA EL LOADER *************************************************/
+    /************************** ADMINISTRACIÓN DE CONTACTOS ***************************************/
     /**********************************************************************************************/
 
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return null;
+    public void agregarContacto(View v){
+
+        //Se valida inicialmente si tenemos permisos para acceder a los contactos
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            //Aquí solicita permisos
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS},Constantes.MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+            //después de solicitar los permisos llama al método: onRequestPermissionsResult, para proceder de acuerdo a la respuesta del usuario.
+        } else {
+            //Si tenemos permisos continúa con el proceso normal
+            cargarContactos();
+        }
+
+    }
+
+    public void cargarContactos() {
+
+        // using native contacts selection
+        // Intent.ACTION_PICK = Pick an item from the data, returning what was selected.
+        startActivityForResult(new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI), Constantes.REQUEST_CODE_PICK_CONTACTS);
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == Constantes.REQUEST_CODE_PICK_CONTACTS && resultCode == RESULT_OK) {
+            Log.d(TAG, "Response: " + data.toString());
+            uriContact = data.getData();
+
+            contactName = null;
+            contactNumber = null;
+            contactEmail = null;
+
+            consultarIdContacto();
+            consultarNombreContacto();
+            consultarCorreoContacto();
+            consultarTelefonoContacto();
+            mostrarInfoContacto();
+
+        }
+    }
+
+    private void consultarIdContacto() {
+
+        // getting contacts ID
+        Cursor cursorID = getContentResolver().query(uriContact,
+                new String[]{ContactsContract.Contacts._ID},
+                null, null, null);
+
+        if (cursorID.moveToFirst()) {
+            contactID = cursorID.getString(cursorID.getColumnIndex(ContactsContract.Contacts._ID));
+        }
+        cursorID.close();
+        Log.d(TAG, "Contact ID: " + contactID);
 
     }
 
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+    private void consultarNombreContacto() {
+
+
+        Cursor cursor = getContentResolver().query(uriContact, null, null, null, null);
+        if (cursor.moveToFirst()) {
+            contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+        }
+        cursor.close();
+        Log.d(TAG, "Contact Name: " + contactName);
+    }
+
+    private void consultarTelefonoContacto() {
+
+        // Using the contact ID now we will get contact phone number
+        Cursor cursorPhone = getContentResolver().query(
+                ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                new String[]{ContactsContract.CommonDataKinds.Phone.NUMBER},
+                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ? AND " +
+                        ContactsContract.CommonDataKinds.Phone.TYPE + " = " +
+                        ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE,
+                new String[]{contactID},
+                null);
+        if (cursorPhone.moveToFirst()) {
+            contactNumber = cursorPhone.getString(cursorPhone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+        }
+        cursorPhone.close();
+        Log.d(TAG, "Contact Phone Number: " + contactNumber);
+    }
+
+    private void consultarCorreoContacto() {
+
+        // querying contact data store
+        Cursor emailCur = getContentResolver().query(
+                ContactsContract.CommonDataKinds.Email.CONTENT_URI,
+                new String[]{ContactsContract.CommonDataKinds.Email.ADDRESS},
+                ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = ?",
+                new String[]{contactID},
+                null);
+
+        while (emailCur.moveToNext()) {
+            contactEmail = emailCur.getString(
+                    emailCur.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA));
+        }
+        emailCur.close();
+        Log.d(TAG, "Contact Email: " + contactEmail);
 
     }
+
+    private void mostrarInfoContacto() {
+
+        Bitmap photo = null;
+
+        TextView nombreContacto1 = (TextView) findViewById(R.id.nombreContacto1);
+        nombreContacto1.setText(contactName);
+
+        TextView telefonoContacto1 = (TextView) findViewById(R.id.telefonoContacto1);
+        telefonoContacto1.setText(contactNumber);
+
+        TextView correoContacto1 = (TextView) findViewById(R.id.correoContacto1);
+        correoContacto1.setText(contactEmail);
+
+
+        ImageView imageView = (ImageView) findViewById(R.id.imagenContacto1);
+        imageView.setImageResource(R.mipmap.ic_launcher);
+
+        try {
+            InputStream inputStream = ContactsContract.Contacts.openContactPhotoInputStream(getContentResolver(),
+                    ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, new Long(contactID)));
+
+            if (inputStream != null) {
+                photo = BitmapFactory.decodeStream(inputStream);
+                //ImageView imageView = (ImageView) findViewById(R.id.imagenContacto1);
+                imageView.setImageBitmap(photo);
+                inputStream.close();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 }
