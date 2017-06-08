@@ -69,7 +69,7 @@ public class PrincipalBPActivity extends AppCompatActivity {
                     PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
                     NotificationCompat.Builder builder = new NotificationCompat.Builder(
                             getBaseContext())
-                            .setSmallIcon(android.R.drawable.ic_dialog_info)
+                            .setSmallIcon(R.drawable.logo_notificacion)
                             .setContentTitle("SoSApp")
                             .setContentText("Se encuentra en ejecución")
                             .setWhen(System.currentTimeMillis())

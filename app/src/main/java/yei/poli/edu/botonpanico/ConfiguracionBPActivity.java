@@ -69,6 +69,7 @@ public class ConfiguracionBPActivity extends AppCompatActivity {
         inicializarBtnEnviarCorreo();
         inicializarChkAdjuntarAudio();
         inicializarChkAdjuntarImagenes();
+        inicializarContactos();
     }
 
     /**********************************************************************************************/
@@ -178,6 +179,22 @@ public class ConfiguracionBPActivity extends AppCompatActivity {
         }
     }
 
+    // Inicializa checkBox adjuntar imagenes
+    private void inicializarContactos () {
+
+        String uri = adminPreferencias.obtenerValor(Constantes.CONTACTO1);
+        Log.d(TAG, "uri: " + uri);
+        if(uri != null) {
+            uriContact = Uri.parse(uri);
+
+            consultarIdContacto();
+            consultarNombreContacto();
+            consultarCorreoContacto();
+            consultarTelefonoContacto();
+            mostrarInfoContacto();
+        }
+    }
+
     /**********************************************************************************************/
     /************************** PERMISOS **********************************************************/
     /**********************************************************************************************/
@@ -194,7 +211,7 @@ public class ConfiguracionBPActivity extends AppCompatActivity {
                 } else {
 
                     // El usuario negó los permisos
-                    Toast.makeText(getBaseContext(), getResources().getString(R.string.msjPermisos), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(), getResources().getString(R.string.max4contactos), Toast.LENGTH_LONG).show();
                 }
                 return;
             }
@@ -234,9 +251,9 @@ public class ConfiguracionBPActivity extends AppCompatActivity {
             Log.d(TAG, "Response: " + data.toString());
             uriContact = data.getData();
 
-            contactName = null;
-            contactNumber = null;
-            contactEmail = null;
+            Log.d(TAG, "uri: " + uriContact.toString());
+
+            adminPreferencias.agregarContacto(uriContact.toString());
 
             consultarIdContacto();
             consultarNombreContacto();
@@ -264,6 +281,7 @@ public class ConfiguracionBPActivity extends AppCompatActivity {
 
     private void consultarNombreContacto() {
 
+        contactName = null;
 
         Cursor cursor = getContentResolver().query(uriContact, null, null, null, null);
         if (cursor.moveToFirst()) {
@@ -274,6 +292,8 @@ public class ConfiguracionBPActivity extends AppCompatActivity {
     }
 
     private void consultarTelefonoContacto() {
+
+        contactNumber = null;
 
         // Using the contact ID now we will get contact phone number
         Cursor cursorPhone = getContentResolver().query(
@@ -292,6 +312,8 @@ public class ConfiguracionBPActivity extends AppCompatActivity {
     }
 
     private void consultarCorreoContacto() {
+
+        contactEmail = null;
 
         // querying contact data store
         Cursor emailCur = getContentResolver().query(

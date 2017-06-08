@@ -21,4 +21,12 @@
     <string name="adjuntarAudio">Add Audio</string>
     <string name="gracias">Thank you!</string>
     <string name="msjPermisos">Permissions are required to continue.</string>
+    <string name="nombreContacto">Name</string>
+    <string name="telefonoContacto">Phone</string>
+    <string name="correoContacto">Email</string>
+    <string name="max4contactos">You can only add 4 contacts.</string>
+    <string name="contactos">Contacts</string>
+    <string name="tipoAdjunto">Type Attached</string>
+    <string name="tipoEnvio">Type Sending</string>
+    <string name="sinContacto">Unassigned contact</string>
 </resources>

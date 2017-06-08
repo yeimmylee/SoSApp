@@ -9,16 +9,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="yei.poli.edu.botonpanico.PrincipalBPActivity">
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:srcCompat="@mipmap/ic_launcher"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/imageView" />
+    tools:context="yei.poli.edu.botonpanico.PrincipalBPActivity"
+    android:theme="@style/AppTheme">
 
     <Switch
         android:text="@string/activarBP"
@@ -74,5 +66,13 @@
         android:layout_above="@+id/activarBP"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+    <ImageView
+        app:srcCompat="@drawable/logo_app"
+        android:id="@+id/imageView"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_width="480dp"
+        android:layout_height="240dp" />
 
 </RelativeLayout>

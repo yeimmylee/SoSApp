@@ -9,6 +9,7 @@
     <string name="title_activity_acerca_de">Acerca De</string>
     <string name="acerca_de_text" translatable="false">
         "Botón de Pánico - SoSApp.\n\n"
+        "contacto.sosapp@gmail.com\n\n"
         "Desarrolladores: \n"
         "Javier Becerra\n"
         "Yeimmy Lee\n\n"
@@ -191,5 +192,13 @@
     <string name="adjuntarAudio">Adjuntar Audio</string>
     <string name="gracias">Gracias</string>
     <string name="msjPermisos">Se requieren permisos para poder continuar.</string>
+    <string name="nombreContacto">Nombre</string>
+    <string name="telefonoContacto">Teléfono</string>
+    <string name="correoContacto">Correo E</string>
+    <string name="max4contactos">Sólo se pueden agregar 4 contactos.</string>
+    <string name="contactos">Contactos</string>
+    <string name="tipoEnvio">Tipo de Envío</string>
+    <string name="tipoAdjunto">Tipo Adjunto</string>
+    <string name="sinContacto">Contacto sin asignar</string>
 
 </resources>

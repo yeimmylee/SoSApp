@@ -16,6 +16,11 @@ public class Constantes {
     public static final String ADJUNTAR_IMAGEN = "adjuntarImagen";
     public static final String ADJUNTAR_AUDIO = "adjuntarAudio";
     public static final String CONTACTOS = "contactos";
+    public static final String CONTACTO = "contacto";
+    public static final String CONTACTO1 = "contacto1";
+    public static final String CONTACTO2 = "contacto2";
+    public static final String CONTACTO3 = "contacto3";
+    public static final String CONTACTO4 = "contacto4";
     public static final String HISTORIAS = "historias";
     // id de la notificación permanente de cuando la aplicación está activada
     public static final int NOTIFICATION_ID = 12345;

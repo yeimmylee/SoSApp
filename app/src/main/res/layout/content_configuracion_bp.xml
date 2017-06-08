@@ -18,46 +18,65 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin">
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="30dp" />
 
 
+<!--
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp" />
 
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center">
+
+
+                    <TextView
+                        android:text="@string/agregar_contacto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textView" />
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@android:drawable/ic_input_add"
+                        android:id="@+id/imageButton"
+                        android:onClick="agregarContacto"/>
+
+
+                </LinearLayout>
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp" />
+-->
+
+        <!-- *********************************************************************************** -->
+        <!-- *********************************************************************************** -->
+        <!-- Contactos -->
+        <!-- *********************************************************************************** -->
+        <!-- *********************************************************************************** -->
+        <TextView
+            android:text="@string/contactos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView"
+            android:paddingBottom="@dimen/text_margin"
+            style="@style/AppTheme.titulosConfig"/>
+
+        <!-- *********************************************************************************** -->
+        <!-- contacto 1 -->
+        <!-- *********************************************************************************** -->
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAlignment="center">
-
-
-            <TextView
-                android:text="@string/agregar_contacto"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/textView" />
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@android:drawable/ic_input_add"
-                android:id="@+id/imageButton"
-                android:onClick="agregarContacto"/>
-
-
-        </LinearLayout>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="30dp" />
-
-
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="center">
+            android:textAlignment="center"
+            android:id="@+id/contacto1"
+            android:onClick="agregarContacto"
+            android:paddingBottom="@dimen/text_margin">
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -66,10 +85,9 @@
                 android:textAlignment="center">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     app:srcCompat="@mipmap/ic_launcher"
-                    android:id="@+id/imagenContacto1" />
+                    android:id="@+id/imagenContacto1"
+                    style="@style/AppTheme.imagenContacto" />
 
             </LinearLayout>
 
@@ -79,19 +97,19 @@
                 android:layout_height="wrap_content"
                 android:textAlignment="center">
                 <TextView
-                    android:text="1"
+                    android:text=""
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/nombreContacto1" />
 
                 <TextView
-                    android:text="2"
+                    android:text="@string/sinContacto"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/telefonoContacto1" />
 
                 <TextView
-                    android:text="3"
+                    android:text=""
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/correoContacto1" />
@@ -99,10 +117,188 @@
             </LinearLayout>
         </LinearLayout>
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="30dp" />
 
+
+        <!-- *********************************************************************************** -->
+        <!-- contacto 2 -->
+        <!-- *********************************************************************************** -->
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:id="@+id/contacto2"
+            android:onClick="agregarContacto"
+            android:paddingBottom="@dimen/text_margin">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center">
+
+                <ImageView
+                    app:srcCompat="@mipmap/ic_launcher"
+                    android:id="@+id/imagenContacto2"
+                    style="@style/AppTheme.imagenContacto"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center">
+
+                <TextView
+                    android:text=""
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/nombreContacto2" />
+
+                <TextView
+                    android:text="@string/sinContacto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/telefonoContacto2" />
+
+                <TextView
+                    android:text=""
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/correoContacto2" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+
+
+        <!-- *********************************************************************************** -->
+        <!-- contacto 3 -->
+        <!-- *********************************************************************************** -->
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:id="@+id/contacto3"
+            android:onClick="agregarContacto"
+            android:paddingBottom="@dimen/text_margin">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center">
+
+                <ImageView
+                    app:srcCompat="@mipmap/ic_launcher"
+                    android:id="@+id/imagenContacto3"
+                    style="@style/AppTheme.imagenContacto" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center">
+                <TextView
+                    android:text=""
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/nombreContacto3" />
+
+                <TextView
+                    android:text="@string/sinContacto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/telefonoContacto3" />
+
+                <TextView
+                    android:text=""
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/correoContacto3" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+
+
+        <!-- *********************************************************************************** -->
+        <!-- contacto 4 -->
+        <!-- *********************************************************************************** -->
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:id="@+id/contacto4"
+            android:onClick="agregarContacto"
+            android:paddingBottom="@dimen/text_margin">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center">
+
+                <ImageView
+                    app:srcCompat="@mipmap/ic_launcher"
+                    android:id="@+id/imagenContacto4"
+                    style="@style/AppTheme.imagenContacto"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center">
+                <TextView
+                    android:text=""
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/nombreContacto4" />
+
+                <TextView
+                    android:text="@string/sinContacto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/telefonoContacto4" />
+
+                <TextView
+                    android:text=""
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/correoContacto4" />
+
+            </LinearLayout>
+        </LinearLayout>
+        <!--
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp" />
+
+        -->
+        <!-- *********************************************************************************** -->
+        <!-- *********************************************************************************** -->
+        <!-- Tipo de Envío -->
+        <!-- *********************************************************************************** -->
+        <!-- *********************************************************************************** -->
+        <TextView
+            android:text="@string/tipoEnvio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tipoEnvio"
+            style="@style/AppTheme.titulosConfig"/>
 
         <Switch
             android:text="@string/enviarMensaje"
@@ -127,9 +323,23 @@
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true" />
 
+
+        <!-- *********************************************************************************** -->
+        <!-- *********************************************************************************** -->
+        <!-- Tipo de Envío -->
+        <!-- *********************************************************************************** -->
+        <!-- *********************************************************************************** -->
+
         <Space
             android:layout_width="match_parent"
-            android:layout_height="30dp" />
+            android:layout_height="@dimen/text_margin" />
+
+        <TextView
+            android:text="@string/tipoAdjunto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tipoAdjunto"
+            style="@style/AppTheme.titulosConfig"/>
 
         <CheckBox
             android:text="@string/adjuntarImagen"

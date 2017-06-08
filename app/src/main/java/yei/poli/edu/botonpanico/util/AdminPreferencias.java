@@ -2,6 +2,9 @@ package yei.poli.edu.botonpanico.util;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.widget.Toast;
+
+import yei.poli.edu.botonpanico.R;
 
 /**
  * Created by Yeimmy Lee, Javier Becerra - Politécnico Grancolombiano - 2017
@@ -29,31 +32,7 @@ public class AdminPreferencias {
     public void guardarValor(String clave, String valor) {
 
         editor = preferenciasBP.edit();
-
-        switch (clave) {
-            case Constantes.ACTIVO :
-                editor.putString(Constantes.ACTIVO, valor);
-                break;
-            case Constantes.ENVIAR_MENSAJE :
-                editor.putString(Constantes.ENVIAR_MENSAJE, valor);
-                break;
-            case Constantes.ENVIAR_CORREO :
-                editor.putString(Constantes.ENVIAR_CORREO, valor);
-                break;
-            case Constantes.ADJUNTAR_IMAGEN :
-                editor.putString(Constantes.ADJUNTAR_IMAGEN, valor);
-                break;
-            case Constantes.ADJUNTAR_AUDIO :
-                editor.putString(Constantes.ADJUNTAR_AUDIO, valor);
-                break;
-            case Constantes.CONTACTOS :
-                editor.putString(Constantes.CONTACTOS, valor);
-                break;
-            case Constantes.HISTORIAS :
-                editor.putString(Constantes.HISTORIAS, valor);
-                break;
-        }
-
+        editor.putString(clave, valor);
         editor.commit();
 
     }
@@ -76,9 +55,84 @@ public class AdminPreferencias {
                 return preferenciasBP.getString(Constantes.CONTACTOS, "0");
             case Constantes.HISTORIAS :
                 return preferenciasBP.getString(Constantes.HISTORIAS, "0");
+            case Constantes.CONTACTO1 :
+                return preferenciasBP.getString(Constantes.CONTACTO1, null);
+            case Constantes.CONTACTO2 :
+                return preferenciasBP.getString(Constantes.CONTACTO2, null);
+            case Constantes.CONTACTO3 :
+                return preferenciasBP.getString(Constantes.CONTACTO3, null);
+            case Constantes.CONTACTO4 :
+                return preferenciasBP.getString(Constantes.CONTACTO4, null);
         }
 
         return null;
+
+    }
+
+    //elimina preferencia
+    public void eliminarValor(String clave) {
+
+        editor = preferenciasBP.edit();
+        editor.remove(clave);
+        editor.commit();
+
+    }
+
+    /**********************************************************************************************/
+    /************************** ADMINISTRAR CONTACTOS *********************************************/
+    /**********************************************************************************************/
+
+    public void agregarContacto (String valor) {
+
+        // incrementar el contador
+        int pos = Integer.parseInt(obtenerValor(Constantes.CONTACTOS)) + 1;
+        guardarValor(Constantes.CONTACTOS, String.valueOf(pos));
+
+        // guardar el valor en la siguiente posición
+        if(pos > 4) {
+            Toast.makeText(activity.getBaseContext(), activity.getResources().getString(R.string.max4contactos), Toast.LENGTH_LONG).show();
+        } else {
+            guardarValor(Constantes.CONTACTO+pos,  valor);
+        }
+    }
+
+    public void editarContacto (String valor, int pos) {
+
+        // guardar el valor en la posición recibida como parámetro
+        if(pos > 4) {
+            Toast.makeText(activity.getBaseContext(), activity.getResources().getString(R.string.max4contactos), Toast.LENGTH_LONG).show();
+        } else {
+            guardarValor(Constantes.CONTACTO+pos,  valor);
+        }
+    }
+
+    public void eliminarContacto(int pos) {
+
+        if(pos > 4) {
+            Toast.makeText(activity.getBaseContext(), activity.getResources().getString(R.string.max4contactos), Toast.LENGTH_LONG).show();
+        } else {
+            // consultar cantidad actual de contactos
+            int cant = Integer.parseInt(obtenerValor(Constantes.CONTACTOS));
+
+            // si la pos no es el último mover los contactos para reorganizarlos
+            if(pos < cant) {
+                for (int i = pos; i < cant; i++) {
+                    guardarValor(Constantes.CONTACTO+i, obtenerValor(Constantes.CONTACTO+(i+1)));
+                }
+            }
+
+            // borrar el último
+            eliminarValor(Constantes.CONTACTO+cant);
+
+            // actualizar el contador
+            guardarValor(Constantes.CONTACTOS, String.valueOf(cant-1));
+
+        }
+    }
+
+    public String consultarContacto(int pos) {
+
+        return obtenerValor(Constantes.CONTACTO+pos);
 
     }
 }
