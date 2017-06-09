@@ -2,6 +2,7 @@ package yei.poli.edu.botonpanico;
 
 import android.Manifest;
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -12,13 +13,23 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AppCompatActivity;
+
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.ActionMode;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,6 +53,10 @@ public class ConfiguracionBPActivity extends AppCompatActivity {
     private Switch btnEnviarCorreo;
     private CheckBox chkAdjuntarAudio;
     private CheckBox chkAdjuntarImagenes;
+    private LinearLayout contacto1;
+    private LinearLayout contacto2;
+    private LinearLayout contacto3;
+    private LinearLayout contacto4;
 
     /** preferencias **/
     private AdminPreferencias adminPreferencias;
@@ -53,6 +68,14 @@ public class ConfiguracionBPActivity extends AppCompatActivity {
     private String contactEmail;
     private String contactNumber;
 
+    /** menú contextual */
+    private ActionMode mActionMode;
+    private int contactoActual;
+
+    /*** pruebas menu popup */
+    private Context mContext;
+    private PopupMenu popupMenu;
+    private boolean editarContacto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,13 +86,22 @@ public class ConfiguracionBPActivity extends AppCompatActivity {
 
         // inicializa preferencias
         adminPreferencias = new AdminPreferencias(this);
+        editarContacto = false;
 
         // inicializa vista
         inicializarBtnEnviarMensaje();
         inicializarBtnEnviarCorreo();
         inicializarChkAdjuntarAudio();
         inicializarChkAdjuntarImagenes();
+        inicializarMenuContextual();
         inicializarContactos();
+
+        /*** para el menu popup */
+        mContext = getApplicationContext();
+
+        /************************************/
+        //verTodos();
+
     }
 
     /**********************************************************************************************/
@@ -182,17 +214,133 @@ public class ConfiguracionBPActivity extends AppCompatActivity {
     // Inicializa checkBox adjuntar imagenes
     private void inicializarContactos () {
 
-        String uri = adminPreferencias.obtenerValor(Constantes.CONTACTO1);
-        Log.d(TAG, "uri: " + uri);
-        if(uri != null) {
-            uriContact = Uri.parse(uri);
+        //int cant = Integer.parseInt(adminPreferencias.obtenerValor(Constantes.CONTACTOS));
+        //Log.d(TAG, "cant: " + cant);
+        for (int i = 1; i <= 4; i++) {
+            String uri = adminPreferencias.obtenerValor(Constantes.CONTACTO+i);
+            Log.d(TAG, "uri: " + uri);
+            if(uri != null) {
+                uriContact = Uri.parse(uri);
+                contactoActual = i;
 
-            consultarIdContacto();
-            consultarNombreContacto();
-            consultarCorreoContacto();
-            consultarTelefonoContacto();
-            mostrarInfoContacto();
+                consultarIdContacto();
+                consultarNombreContacto();
+                consultarCorreoContacto();
+                consultarTelefonoContacto();
+                mostrarInfoContacto();
+            } else {
+                contactoActual = i;
+                borrarInfoContacto();
+            }
         }
+    }
+
+    public void inicializarMenuContextual() {
+
+        getSupportActionBar();
+
+        contacto1 = (LinearLayout) findViewById(R.id.contacto1);
+        contacto1.setOnTouchListener(new AdministraTouch());
+
+        contacto2 = (LinearLayout) findViewById(R.id.contacto2);
+        contacto2.setOnTouchListener(new AdministraTouch());
+
+        contacto3 = (LinearLayout) findViewById(R.id.contacto3);
+        contacto3.setOnTouchListener(new AdministraTouch());
+
+        contacto4 = (LinearLayout) findViewById(R.id.contacto4);
+        contacto4.setOnTouchListener(new AdministraTouch());
+
+
+    }
+
+    class AdministraTouch implements View.OnTouchListener {
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            int action = MotionEventCompat.getActionMasked(event);
+            switch (action) {
+                case (MotionEvent.ACTION_DOWN):
+                    //Log.d(TAG, "La accion ha sido ABAJO");
+
+                        switch (v.getId()) {
+
+                            case R.id.contacto1:
+
+                                popupMenu = new PopupMenu(mContext, contacto1);
+                                contactoActual = 1;
+                                break;
+
+                            case R.id.contacto2:
+
+                                popupMenu = new PopupMenu(mContext, contacto2);
+                                contactoActual = 2;
+                                break;
+
+                            case R.id.contacto3:
+
+                                popupMenu = new PopupMenu(mContext, contacto3);
+                                contactoActual = 3;
+                                break;
+
+                            case R.id.contacto4:
+
+                                popupMenu = new PopupMenu(mContext, contacto4);
+                                contactoActual = 4;
+                                break;
+                        }
+                        mostrarOpcionesContacto();
+
+                    return true;
+                default:
+                    return true;
+            }
+        }
+    }
+
+    public void mostrarOpcionesContacto(){
+
+        if(adminPreferencias.obtenerValor(Constantes.CONTACTO+contactoActual) == null) {
+            agregarContacto(null);
+        } else {
+            popupMenu.getMenuInflater().inflate(R.menu.pop_up_menu, popupMenu.getMenu());
+            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem menuItem) {
+                    switch(menuItem.getItemId()){
+                        case R.id.borrar:
+                            adminPreferencias.eliminarContacto(contactoActual);
+                            inicializarContactos ();
+                            return true;
+                        case R.id.actualizar:
+                            editarContacto = true;
+                            agregarContacto(null);
+                            return true;
+                        default:
+                            return false;
+                    }
+                }
+            });
+
+            popupMenu.show();
+        }
+
+
+
+
+
+/*
+        if(adminPreferencias.obtenerValor(Constantes.CONTACTO+contactoActual) == null) {
+            cerrarMenuContextual();
+            agregarContacto(null);
+        } else {
+            mActionMode = ConfiguracionBPActivity.this.startActionMode(new ActionBarCallBack());
+        }*/
+    }
+
+    private void cerrarMenuContextual (){
+        if(mActionMode != null )
+            mActionMode.finish();
     }
 
     /**********************************************************************************************/
@@ -248,18 +396,22 @@ public class ConfiguracionBPActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == Constantes.REQUEST_CODE_PICK_CONTACTS && resultCode == RESULT_OK) {
-            Log.d(TAG, "Response: " + data.toString());
+            //Log.d(TAG, "Response: " + data.toString());
             uriContact = data.getData();
-
-            Log.d(TAG, "uri: " + uriContact.toString());
-
-            adminPreferencias.agregarContacto(uriContact.toString());
-
-            consultarIdContacto();
-            consultarNombreContacto();
-            consultarCorreoContacto();
-            consultarTelefonoContacto();
-            mostrarInfoContacto();
+            //Log.d(TAG, "uri: " + uriContact.toString());
+            if(editarContacto) {
+                contactoActual =  adminPreferencias.editarContacto(uriContact.toString(), contactoActual);
+            } else {
+                contactoActual =  adminPreferencias.agregarContacto(uriContact.toString());
+            }
+            editarContacto = false;
+            if(contactoActual > 0) {
+                consultarIdContacto();
+                consultarNombreContacto();
+                consultarCorreoContacto();
+                consultarTelefonoContacto();
+                mostrarInfoContacto();
+            }
 
         }
     }
@@ -335,18 +487,41 @@ public class ConfiguracionBPActivity extends AppCompatActivity {
     private void mostrarInfoContacto() {
 
         Bitmap photo = null;
+        TextView nombreContacto = null;
+        TextView telefonoContacto = null;
+        TextView correoContacto = null;
+        ImageView imageView = null;
 
-        TextView nombreContacto1 = (TextView) findViewById(R.id.nombreContacto1);
-        nombreContacto1.setText(contactName);
+        switch (contactoActual) {
+            case 1 :
+                nombreContacto = (TextView) findViewById(R.id.nombreContacto1);
+                telefonoContacto = (TextView) findViewById(R.id.telefonoContacto1);
+                correoContacto = (TextView) findViewById(R.id.correoContacto1);
+                imageView = (ImageView) findViewById(R.id.imagenContacto1);
+                break;
+            case 2 :
+                nombreContacto = (TextView) findViewById(R.id.nombreContacto2);
+                telefonoContacto = (TextView) findViewById(R.id.telefonoContacto2);
+                correoContacto = (TextView) findViewById(R.id.correoContacto2);
+                imageView = (ImageView) findViewById(R.id.imagenContacto2);
+                break;
+            case 3 :
+                nombreContacto = (TextView) findViewById(R.id.nombreContacto3);
+                telefonoContacto = (TextView) findViewById(R.id.telefonoContacto3);
+                correoContacto = (TextView) findViewById(R.id.correoContacto3);
+                imageView = (ImageView) findViewById(R.id.imagenContacto3);
+                break;
+            case 4 :
+                nombreContacto = (TextView) findViewById(R.id.nombreContacto4);
+                telefonoContacto = (TextView) findViewById(R.id.telefonoContacto4);
+                correoContacto = (TextView) findViewById(R.id.correoContacto4);
+                imageView = (ImageView) findViewById(R.id.imagenContacto4);
+                break;
+        }
 
-        TextView telefonoContacto1 = (TextView) findViewById(R.id.telefonoContacto1);
-        telefonoContacto1.setText(contactNumber);
-
-        TextView correoContacto1 = (TextView) findViewById(R.id.correoContacto1);
-        correoContacto1.setText(contactEmail);
-
-
-        ImageView imageView = (ImageView) findViewById(R.id.imagenContacto1);
+        nombreContacto.setText(contactName);
+        telefonoContacto.setText(contactNumber);
+        correoContacto.setText(contactEmail);
         imageView.setImageResource(R.mipmap.ic_launcher);
 
         try {
@@ -365,5 +540,85 @@ public class ConfiguracionBPActivity extends AppCompatActivity {
         }
 
     }
+
+    private void borrarInfoContacto() {
+
+        Bitmap photo = null;
+        TextView nombreContacto = null;
+        TextView telefonoContacto = null;
+        TextView correoContacto = null;
+        ImageView imageView = null;
+
+        switch (contactoActual) {
+            case 1 :
+                nombreContacto = (TextView) findViewById(R.id.nombreContacto1);
+                telefonoContacto = (TextView) findViewById(R.id.telefonoContacto1);
+                correoContacto = (TextView) findViewById(R.id.correoContacto1);
+                imageView = (ImageView) findViewById(R.id.imagenContacto1);
+                break;
+            case 2 :
+                nombreContacto = (TextView) findViewById(R.id.nombreContacto2);
+                telefonoContacto = (TextView) findViewById(R.id.telefonoContacto2);
+                correoContacto = (TextView) findViewById(R.id.correoContacto2);
+                imageView = (ImageView) findViewById(R.id.imagenContacto2);
+                break;
+            case 3 :
+                nombreContacto = (TextView) findViewById(R.id.nombreContacto3);
+                telefonoContacto = (TextView) findViewById(R.id.telefonoContacto3);
+                correoContacto = (TextView) findViewById(R.id.correoContacto3);
+                imageView = (ImageView) findViewById(R.id.imagenContacto3);
+                break;
+            case 4 :
+                nombreContacto = (TextView) findViewById(R.id.nombreContacto4);
+                telefonoContacto = (TextView) findViewById(R.id.telefonoContacto4);
+                correoContacto = (TextView) findViewById(R.id.correoContacto4);
+                imageView = (ImageView) findViewById(R.id.imagenContacto4);
+                break;
+        }
+        if(contactoActual > 0) {
+            nombreContacto.setText("");
+            telefonoContacto.setText(getResources().getString(R.string.sinContacto));
+            correoContacto.setText("");
+            imageView.setImageResource(R.mipmap.ic_launcher);
+        }
+
+
+    }
+
+    public void verTodos(){
+        Log.d(TAG, "Cantidad: " + adminPreferencias.obtenerValor(Constantes.CONTACTOS));
+        Log.d(TAG, "1: " + adminPreferencias.obtenerValor(Constantes.CONTACTO1));
+        Log.d(TAG, "2: " + adminPreferencias.obtenerValor(Constantes.CONTACTO2));
+        Log.d(TAG, "3: " + adminPreferencias.obtenerValor(Constantes.CONTACTO3));
+        Log.d(TAG, "4: " + adminPreferencias.obtenerValor(Constantes.CONTACTO4));
+
+
+    }
+
+
+   /* class ActionBarCallBack implements ActionMode.Callback {
+
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mode.getMenuInflater().inflate(R.menu.menu_configuracion_b, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            //mode.setTitle(getResources().getString(R.string.menuContacto));
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            return false;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+
+        }
+    }*/
 
 }

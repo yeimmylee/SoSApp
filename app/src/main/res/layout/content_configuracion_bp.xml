@@ -74,9 +74,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:id="@+id/contacto1"
-            android:onClick="agregarContacto"
-            android:paddingBottom="@dimen/text_margin">
+            android:id="@+id/contacto1">
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -129,9 +127,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:id="@+id/contacto2"
-            android:onClick="agregarContacto"
-            android:paddingBottom="@dimen/text_margin">
+            android:id="@+id/contacto2">
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -185,9 +181,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:id="@+id/contacto3"
-            android:onClick="agregarContacto"
-            android:paddingBottom="@dimen/text_margin">
+            android:id="@+id/contacto3">
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -241,7 +235,6 @@
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:id="@+id/contacto4"
-            android:onClick="agregarContacto"
             android:paddingBottom="@dimen/text_margin">
 
             <LinearLayout

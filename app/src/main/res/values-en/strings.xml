@@ -29,4 +29,8 @@
     <string name="tipoAdjunto">Type Attached</string>
     <string name="tipoEnvio">Type Sending</string>
     <string name="sinContacto">Unassigned contact</string>
+    <string name="menuContacto">Contact Menu</string>
+    <string name="actualizar">Update</string>
+    <string name="borrar">Delete</string>
+    <string name="contactoExiste">Contacto already exists</string>
 </resources>

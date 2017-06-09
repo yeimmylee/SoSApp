@@ -200,5 +200,9 @@
     <string name="tipoEnvio">Tipo de Envío</string>
     <string name="tipoAdjunto">Tipo Adjunto</string>
     <string name="sinContacto">Contacto sin asignar</string>
+    <string name="menuContacto">Menú Contacto</string>
+    <string name="actualizar">Actualizar</string>
+    <string name="borrar">Borrar</string>
+    <string name="contactoExiste">El contacto ya existe</string>
 
 </resources>

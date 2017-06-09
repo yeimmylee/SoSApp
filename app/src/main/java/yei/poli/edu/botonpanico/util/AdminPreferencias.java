@@ -82,28 +82,61 @@ public class AdminPreferencias {
     /************************** ADMINISTRAR CONTACTOS *********************************************/
     /**********************************************************************************************/
 
-    public void agregarContacto (String valor) {
+    // guarda un contacto en el archivo de preferencias y devuelve la posición
+    public int agregarContacto (String valor) {
 
         // incrementar el contador
         int pos = Integer.parseInt(obtenerValor(Constantes.CONTACTOS)) + 1;
-        guardarValor(Constantes.CONTACTOS, String.valueOf(pos));
 
         // guardar el valor en la siguiente posición
         if(pos > 4) {
             Toast.makeText(activity.getBaseContext(), activity.getResources().getString(R.string.max4contactos), Toast.LENGTH_LONG).show();
+            return -1;
         } else {
-            guardarValor(Constantes.CONTACTO+pos,  valor);
+
+            //valida que el contacto no exísta
+            if(!contactoExiste(valor)) {
+                // actualiza la cantidad de contactos configurados
+                guardarValor(Constantes.CONTACTOS, String.valueOf(pos));
+                // guarda el valor en las preferencias
+                guardarValor(Constantes.CONTACTO + pos, valor);
+
+            } else {
+                return -1;
+            }
+
         }
+        return pos;
     }
 
-    public void editarContacto (String valor, int pos) {
+    //valida que el contacto no exísta
+    public boolean contactoExiste(String valor) {
+
+        for (int i = 1; i < 4; i++) {
+            String val = obtenerValor(Constantes.CONTACTO+i);
+            if(val != null && val.equals(valor)) {
+                Toast.makeText(activity.getBaseContext(), activity.getResources().getString(R.string.contactoExiste), Toast.LENGTH_LONG).show();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int editarContacto (String valor, int pos) {
 
         // guardar el valor en la posición recibida como parámetro
         if(pos > 4) {
             Toast.makeText(activity.getBaseContext(), activity.getResources().getString(R.string.max4contactos), Toast.LENGTH_LONG).show();
+            return -1;
         } else {
-            guardarValor(Constantes.CONTACTO+pos,  valor);
+            //valida que el contacto no exísta
+            if(!contactoExiste(valor)) {
+                guardarValor(Constantes.CONTACTO + pos, valor);
+            } else {
+                return -1;
+            }
         }
+        return pos;
     }
 
     public void eliminarContacto(int pos) {
