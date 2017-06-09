@@ -37,7 +37,8 @@
         android:layout_below="@+id/btnConfiguracion"
         android:layout_centerHorizontal="true"
         android:id="@+id/btnHistorial"
-        android:onClick="mostrarAlertas"/>
+        android:onClick="mostrarAlertas"
+        android:visibility="gone" />
 
     <Button
         android:text="@string/btnAcercaDe"
