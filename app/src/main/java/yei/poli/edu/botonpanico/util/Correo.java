@@ -70,11 +70,12 @@ public class Correo {
     }
 
     public String armarCuerpo (String nombre, String ubicacion) {
-        String mensaje = activity.getResources().getString(R.string.hola)+ "\n";
+        String mensaje = activity.getResources().getString(R.string.hola)+ ",<br/>";
         mensaje += activity.getResources().getString(R.string.tuamigo)+ " ";
         mensaje += nombre;
         mensaje += activity.getResources().getString(R.string.cuerpoMensaje)+ " ";
-        mensaje += ubicacion;
+        mensaje += ubicacion+ "<br/>"+ "<br/>";
+        mensaje += activity.getResources().getString(R.string.mensajeGeneradoAutomáticamente);
 
         return mensaje;
     }

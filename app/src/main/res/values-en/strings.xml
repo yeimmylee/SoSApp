@@ -36,7 +36,7 @@
     <string name="ayuda">Help</string>
     <string name="hola">Hello</string>
     <string name="tuamigo">Your Friend</string>
-    <string name="cuerpoMensaje">is currently in a emergency and requests your help. The location is:</string>
+    <string name="cuerpoMensaje">is currently in an emergency and requests your help. The location is:</string>
     <string name="mensajeTexto">I have an emergency, I am at:</string>
     <string name="prueba">Test</string>
     <string name="ingresaNombre">Please enter a name for the mails.</string>
@@ -47,4 +47,5 @@
     <string name="aplicacionInactiva">You must activate the app</string>
     <string name="contactoSinCorreo">Contact without email</string>
     <string name="seEncuentraEnEjecucion">Is running</string>
+    <string name="mensajeGeneradoAutomáticamente">This message was generated automatically, please do not respond. Thank you.</string>
 </resources>

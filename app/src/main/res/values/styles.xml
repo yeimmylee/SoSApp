@@ -31,8 +31,8 @@
     </style>
 
     <style name="AppTheme.imagenAyuda">
-        <item name="android:layout_width">130dp</item>
-        <item name="android:layout_height">130dp</item>
+        <item name="android:layout_width">340dp</item>
+        <item name="android:layout_height">600dp</item>
         <item name="android:padding">5dp</item>
     </style>
 

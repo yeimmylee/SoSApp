@@ -138,5 +138,6 @@
     <string name="aplicacionInactiva">Debes activar la aplicación</string>
     <string name="contactoSinCorreo">Contacto sin correo electrónico.</string>
     <string name="seEncuentraEnEjecucion">Se encuentra en ejecución</string>
+    <string name="mensajeGeneradoAutomáticamente">Este mensaje fue generado automáticamente, por favor no responder. Gracias.</string>
 
 </resources>
