@@ -26,6 +26,7 @@ public class Constantes {
     public static final int NOTIFICATION_ID = 12345;
     // para los permisos
     public static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
+    public static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 2;
     // para los contactos
     public static final int REQUEST_CODE_PICK_CONTACTS = 1;
 

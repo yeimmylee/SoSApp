@@ -20,7 +20,7 @@
     <string name="adjuntarImagen">Add Images</string>
     <string name="adjuntarAudio">Add Audio</string>
     <string name="gracias">Thank you!</string>
-    <string name="msjPermisos">Permissions are required to continue.</string>
+    <string name="msjPermisos">Permissions are required to activate SoSApp.</string>
     <string name="nombreContacto">Name</string>
     <string name="telefonoContacto">Phone</string>
     <string name="correoContacto">Email</string>
@@ -32,5 +32,19 @@
     <string name="menuContacto">Contact Menu</string>
     <string name="actualizar">Update</string>
     <string name="borrar">Delete</string>
-    <string name="contactoExiste">Contacto already exists</string>
+    <string name="contactoExiste">Contact already exists</string>
+    <string name="ayuda">Help</string>
+    <string name="hola">Hello</string>
+    <string name="tuamigo">Your Friend</string>
+    <string name="cuerpoMensaje">is currently in a emergency and requests your help. The location is:</string>
+    <string name="mensajeTexto">I have an emergency, I am at:</string>
+    <string name="prueba">Test</string>
+    <string name="ingresaNombre">Please enter a name for the mails.</string>
+    <string name="enviarPrueba">Send Test Messages</string>
+    <string name="noHayContactos">There are no contacts configured</string>
+    <string name="contactoSinNumero">Contact without phone number</string>
+    <string name="noMetodoEnvio">You have no send method enabled</string>
+    <string name="aplicacionInactiva">You must activate the app</string>
+    <string name="contactoSinCorreo">Contact without email</string>
+    <string name="seEncuentraEnEjecucion">Is running</string>
 </resources>

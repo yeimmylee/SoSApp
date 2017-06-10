@@ -53,11 +53,14 @@
                     android:layout_height="30dp" />
 -->
 
+
         <!-- *********************************************************************************** -->
         <!-- *********************************************************************************** -->
         <!-- Contactos -->
         <!-- *********************************************************************************** -->
         <!-- *********************************************************************************** -->
+
+
         <TextView
             android:text="@string/contactos"
             android:layout_width="wrap_content"
@@ -356,6 +359,30 @@
             android:id="@+id/adjuntarAudio"
             android:onClick="onCheckboxClicked"  />
 
+
+        <!-- *********************************************************************************** -->
+        <!-- *********************************************************************************** -->
+        <!-- Nombre -->
+        <!-- *********************************************************************************** -->
+        <!-- ***********************************************************************************
+        <TextView
+            android:text="@string/nombreUsuario"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/nombreUsuario"
+            android:paddingBottom="@dimen/text_margin"
+            style="@style/AppTheme.titulosConfig"/>
+
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/editText"
+            android:paddingBottom="@dimen/text_margin"
+            android:hint="@string/ingresaNombre" />
+-->
 
     </LinearLayout>
 

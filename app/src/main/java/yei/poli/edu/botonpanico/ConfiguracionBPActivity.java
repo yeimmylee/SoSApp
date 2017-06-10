@@ -39,6 +39,7 @@ import java.io.InputStream;
 
 import yei.poli.edu.botonpanico.util.AdminPreferencias;
 import yei.poli.edu.botonpanico.util.Constantes;
+import yei.poli.edu.botonpanico.util.ManejoContactos;
 
 /**
  * Created by Yeimmy Lee, Javier Becerra - Politécnico Grancolombiano - 2017
@@ -61,12 +62,9 @@ public class ConfiguracionBPActivity extends AppCompatActivity {
     /** preferencias **/
     private AdminPreferencias adminPreferencias;
 
-    // para los contactos
-    private Uri uriContact;
-    private String contactID;
-    private String contactName;
-    private String contactEmail;
-    private String contactNumber;
+
+    /**  contactos */
+    ManejoContactos manejoContactos;
 
     /** menú contextual */
     private ActionMode mActionMode;
@@ -87,6 +85,9 @@ public class ConfiguracionBPActivity extends AppCompatActivity {
         // inicializa preferencias
         adminPreferencias = new AdminPreferencias(this);
         editarContacto = false;
+
+        // inicializa objeto de manejo de contactos
+        manejoContactos = new ManejoContactos(this);
 
         // inicializa vista
         inicializarBtnEnviarMensaje();
@@ -121,6 +122,7 @@ public class ConfiguracionBPActivity extends AppCompatActivity {
 
                 if(isChecked){
                     adminPreferencias.guardarValor(Constantes.ENVIAR_MENSAJE, "S");
+                    validarPermisosSMS();
                 }else{
                     adminPreferencias.guardarValor(Constantes.ENVIAR_MENSAJE, "N");
                 }
@@ -220,13 +222,13 @@ public class ConfiguracionBPActivity extends AppCompatActivity {
             String uri = adminPreferencias.obtenerValor(Constantes.CONTACTO+i);
             Log.d(TAG, "uri: " + uri);
             if(uri != null) {
-                uriContact = Uri.parse(uri);
+                manejoContactos.uriContact = Uri.parse(uri);
                 contactoActual = i;
 
-                consultarIdContacto();
-                consultarNombreContacto();
-                consultarCorreoContacto();
-                consultarTelefonoContacto();
+                manejoContactos.consultarIdContacto();
+                manejoContactos.consultarNombreContacto();
+                manejoContactos.consultarCorreoContacto();
+                manejoContactos.consultarTelefonoContacto();
                 mostrarInfoContacto();
             } else {
                 contactoActual = i;
@@ -347,6 +349,17 @@ public class ConfiguracionBPActivity extends AppCompatActivity {
     /************************** PERMISOS **********************************************************/
     /**********************************************************************************************/
 
+    public void validarPermisosSMS(){
+
+        //Se valida inicialmente si tenemos permisos para acceder a los contactos
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+            //Aquí solicita permisos
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS},Constantes.MY_PERMISSIONS_REQUEST_SEND_SMS);
+            //después de solicitar los permisos llama al método: onRequestPermissionsResult, para proceder de acuerdo a la respuesta del usuario.
+        }
+
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
@@ -359,7 +372,22 @@ public class ConfiguracionBPActivity extends AppCompatActivity {
                 } else {
 
                     // El usuario negó los permisos
-                    Toast.makeText(getBaseContext(), getResources().getString(R.string.max4contactos), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(), getResources().getString(R.string.msjPermisos), Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+            case Constantes.MY_PERMISSIONS_REQUEST_SEND_SMS: {
+                // Si la solicitud fue cancelada, el resultado es un arreglo vacío.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // El usuario otorgó los permisos
+
+                } else {
+
+                    // El usuario negó los permisos
+                    adminPreferencias.guardarValor(Constantes.ENVIAR_MENSAJE, "N");
+                    btnEnviarMensaje.setChecked(false);
+                    Toast.makeText(getBaseContext(), getResources().getString(R.string.msjPermisos), Toast.LENGTH_LONG).show();
                 }
                 return;
             }
@@ -397,91 +425,23 @@ public class ConfiguracionBPActivity extends AppCompatActivity {
 
         if (requestCode == Constantes.REQUEST_CODE_PICK_CONTACTS && resultCode == RESULT_OK) {
             //Log.d(TAG, "Response: " + data.toString());
-            uriContact = data.getData();
+            manejoContactos.uriContact = data.getData();
             //Log.d(TAG, "uri: " + uriContact.toString());
             if(editarContacto) {
-                contactoActual =  adminPreferencias.editarContacto(uriContact.toString(), contactoActual);
+                contactoActual =  adminPreferencias.editarContacto(manejoContactos.uriContact.toString(), contactoActual);
             } else {
-                contactoActual =  adminPreferencias.agregarContacto(uriContact.toString());
+                contactoActual =  adminPreferencias.agregarContacto(manejoContactos.uriContact.toString());
             }
             editarContacto = false;
             if(contactoActual > 0) {
-                consultarIdContacto();
-                consultarNombreContacto();
-                consultarCorreoContacto();
-                consultarTelefonoContacto();
+                manejoContactos.consultarIdContacto();
+                manejoContactos.consultarNombreContacto();
+                manejoContactos.consultarCorreoContacto();
+                manejoContactos.consultarTelefonoContacto();
                 mostrarInfoContacto();
             }
 
         }
-    }
-
-    private void consultarIdContacto() {
-
-        // getting contacts ID
-        Cursor cursorID = getContentResolver().query(uriContact,
-                new String[]{ContactsContract.Contacts._ID},
-                null, null, null);
-
-        if (cursorID.moveToFirst()) {
-            contactID = cursorID.getString(cursorID.getColumnIndex(ContactsContract.Contacts._ID));
-        }
-        cursorID.close();
-        Log.d(TAG, "Contact ID: " + contactID);
-
-    }
-
-    private void consultarNombreContacto() {
-
-        contactName = null;
-
-        Cursor cursor = getContentResolver().query(uriContact, null, null, null, null);
-        if (cursor.moveToFirst()) {
-            contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-        }
-        cursor.close();
-        Log.d(TAG, "Contact Name: " + contactName);
-    }
-
-    private void consultarTelefonoContacto() {
-
-        contactNumber = null;
-
-        // Using the contact ID now we will get contact phone number
-        Cursor cursorPhone = getContentResolver().query(
-                ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                new String[]{ContactsContract.CommonDataKinds.Phone.NUMBER},
-                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ? AND " +
-                        ContactsContract.CommonDataKinds.Phone.TYPE + " = " +
-                        ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE,
-                new String[]{contactID},
-                null);
-        if (cursorPhone.moveToFirst()) {
-            contactNumber = cursorPhone.getString(cursorPhone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-        }
-        cursorPhone.close();
-        Log.d(TAG, "Contact Phone Number: " + contactNumber);
-    }
-
-    private void consultarCorreoContacto() {
-
-        contactEmail = null;
-
-        // querying contact data store
-        Cursor emailCur = getContentResolver().query(
-                ContactsContract.CommonDataKinds.Email.CONTENT_URI,
-                new String[]{ContactsContract.CommonDataKinds.Email.ADDRESS},
-                ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = ?",
-                new String[]{contactID},
-                null);
-
-        while (emailCur.moveToNext()) {
-            contactEmail = emailCur.getString(
-                    emailCur.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA));
-        }
-        emailCur.close();
-        Log.d(TAG, "Contact Email: " + contactEmail);
-
     }
 
     private void mostrarInfoContacto() {
@@ -519,14 +479,14 @@ public class ConfiguracionBPActivity extends AppCompatActivity {
                 break;
         }
 
-        nombreContacto.setText(contactName);
-        telefonoContacto.setText(contactNumber);
-        correoContacto.setText(contactEmail);
+        nombreContacto.setText(manejoContactos.contactName);
+        telefonoContacto.setText(manejoContactos.contactNumber);
+        correoContacto.setText(manejoContactos.contactEmail);
         imageView.setImageResource(R.mipmap.ic_launcher);
 
         try {
             InputStream inputStream = ContactsContract.Contacts.openContactPhotoInputStream(getContentResolver(),
-                    ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, new Long(contactID)));
+                    ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, new Long(manejoContactos.contactID)));
 
             if (inputStream != null) {
                 photo = BitmapFactory.decodeStream(inputStream);

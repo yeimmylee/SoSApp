@@ -8,10 +8,43 @@
     tools:context="yei.poli.edu.botonpanico.AyudaActivity"
     tools:showIn="@layout/activity_ayuda">
 
-    <TextView
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/configuracion"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
+
+        <TextView
+            android:text="@string/prueba"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView"
+            android:paddingBottom="@dimen/text_margin"
+            style="@style/AppTheme.titulosConfig"/>
+
+
+        <Button
+            android:text="@string/enviarPrueba"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/button"
+            android:onClick="enviarPrueba" />
+
+        <ImageView
+            app:srcCompat="@drawable/logo_splash"
+            android:id="@+id/imageView2"
+            style="@style/AppTheme.imagenAyuda" />
+
+        <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/text_margin"
         android:text="@string/ayuda_text" />
+
+    </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>

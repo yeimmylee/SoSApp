@@ -108,7 +108,7 @@
     <string name="adjuntarImagen">Adjuntar Imágenes</string>
     <string name="adjuntarAudio">Adjuntar Audio</string>
     <string name="gracias">Gracias</string>
-    <string name="msjPermisos">Se requieren permisos para poder continuar.</string>
+    <string name="msjPermisos">Se requieren permisos para poder activar SoSApp.</string>
     <string name="nombreContacto">Nombre</string>
     <string name="telefonoContacto">Teléfono</string>
     <string name="correoContacto">Correo E</string>
@@ -121,5 +121,22 @@
     <string name="actualizar">Actualizar</string>
     <string name="borrar">Borrar</string>
     <string name="contactoExiste">El contacto ya existe</string>
+
+
+    <string name="ayuda">Auxilio</string>
+    <string name="hola">Hola</string>
+    <string name="tuamigo">Tu amigo</string>
+    <string name="cuerpoMensaje">en este momento está en una emergencia y solicita tu ayuda. Su ubicación es: </string>
+    <string name="mensajeTexto">Tengo una emergencia, estoy en:</string>
+    <string name="prueba">Prueba</string>
+    <string name="enviarPrueba">Enviar Mensajes de Prueba</string>
+    <string name="nombreUsuario">Nombre</string>
+    <string name="ingresaNombre">Ingresa un nombre para los correos.</string>
+    <string name="noHayContactos">No hay contactos configurados</string>
+    <string name="contactoSinNumero">Contacto sin número de telefono</string>
+    <string name="noMetodoEnvio">No tiene ningún método de envío activado</string>
+    <string name="aplicacionInactiva">Debes activar la aplicación</string>
+    <string name="contactoSinCorreo">Contacto sin correo electrónico.</string>
+    <string name="seEncuentraEnEjecucion">Se encuentra en ejecución</string>
 
 </resources>
